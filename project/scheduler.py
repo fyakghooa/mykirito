@@ -8,21 +8,22 @@ def challenge_self():
     my_info = my_info_api()
 
     # 死掉先確認點數再轉生
-    if my_info['dead'] or my_info['lv'] >= 10:
+    if my_info['dead']:
+            # or my_info['lv'] >= 10:
         print('dead')
-        point = deploy_point(my_info['lv'])
+        point = new_deploy_point(my_info['lv'])
         # 預設全點 atk
-        status_code = reincarnation_api(character=RoleEnum.lisbeth.name, atk=point)
+        status_code = reincarnation_api(character=RoleEnum.asuna.name, agi=point)
         while status_code != 200:
             # 預設全點 atk
-            status_code = reincarnation_api(character=RoleEnum.lisbeth.name, atk=point)
+            status_code = reincarnation_api(character=RoleEnum.asuna.name, agi=point)
             time.sleep(5)
         my_info = my_info_api()
 
     lv = my_info['lv']
     exp = my_info['exp']
     uid = uuid
-    action_type = ChallengeEnum.seriously.value
+    action_type = ChallengeEnum.friendly.value
     if kill_red_player:
         try:
             exp = my_info_api()['exp']
@@ -48,23 +49,26 @@ def do_action():
     print('do action')
     my_info = my_info_api()
 
-    if my_info['dead'] or my_info['lv'] >= 10:
+    if my_info['dead']:
+            # or my_info['lv'] >= 10:
         print('dead')
-        point = deploy_point(my_info['lv'])
-        # 預設全點 atk
-        status_code = reincarnation_api(character=RoleEnum.lisbeth.name, atk=point)
+        point = new_deploy_point(my_info['lv'])
+        # 預設全點 agi
+        status_code = reincarnation_api(character=RoleEnum.asuna.name, agi=point)
         while status_code != 200:
-            # 預設全點 atk
-            status_code = reincarnation_api(character=RoleEnum.lisbeth.name, atk=point)
+            # 預設全點 agi
+            status_code = reincarnation_api(character=RoleEnum.asuna.name, agi=point)
             time.sleep(5)
         my_info = my_info_api()
     lv = my_info['lv']
-    action_api(ActionEnum.good.name)
+    action_code = action_api(ActionEnum.train2.name)
+    if action_code != 200:
+        action_api(ActionEnum.train2.name)
 
 
 if __name__ == '__main__':
-    schedule.every(88).seconds.do(do_action)
-    schedule.every(400).seconds.do(challenge_self)
+    schedule.every(101).seconds.do(do_action)
+    #schedule.every(400).seconds.do(challenge_self)
 
     while True:
         schedule.run_pending()
